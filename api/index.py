@@ -19,20 +19,20 @@ class handler(BaseHTTPRequestHandler):
         self.wfile.write('Hello, world!'.encode('utf-8'))
         return
     def fetch_data(symbol="XAUUSD=X", interval="1m", period="1d"):
-        """Fetch XAUUSD data from Yahoo Finance."""
+        
         data = yf.download(tickers=symbol, interval=interval, period=period)
         data = data.dropna()  # Drop rows with missing values
         return data
     
     def calculate_indicators(data):
-        """Calculate indicators for scalping."""
+        #"""Calculate indicators for scalping."""
         data['EMA_Short'] = EMAIndicator(data['Close'], window=9).ema_indicator()
         data['EMA_Long'] = EMAIndicator(data['Close'], window=21).ema_indicator()
         data['RSI'] = RSIIndicator(data['Close'], window=14).rsi()
         return data
     
     def check_trading_signals(data):
-        """Check if conditions for buy/sell signals are met."""
+        #"""Check if conditions for buy/sell signals are met."""
         last_row = data.iloc[-1]
         signal = None
     
@@ -44,7 +44,7 @@ class handler(BaseHTTPRequestHandler):
         return signal, last_row['Close']
     
     def do_POST(self):
-        """Main handler for Vercel function."""
+        #"""Main handler for Vercel function."""
         # Fetch and process data
         data = fetch_data()
         data = calculate_indicators(data)
@@ -74,8 +74,4 @@ class handler(BaseHTTPRequestHandler):
                 json=buy_json,
                 headers=headers
             )
-      
-        return {
-            "statusCode": 200,
-            "body": json.dumps(response)
-        }
+        self.send_response(200)
