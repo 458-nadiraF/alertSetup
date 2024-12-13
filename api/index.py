@@ -46,9 +46,15 @@ class handler(BaseHTTPRequestHandler):
     def do_POST(self):
         #"""Main handler for Vercel function."""
         # Fetch and process data
-        data = fetch_data("XAUUSDm","1m","1d")
-        data = calculate_indicators(data)
-        signal, price = check_trading_signals(data)
+        try:
+            data = fetch_data("XAUUSD","1m","1d")
+        except:
+            print("error in fetch")
+        try:
+            data = calculate_indicators(data)
+            signal, price = check_trading_signals(data)
+        except:
+            print("error in calculate")
         if (signal):
             account=os.getenv("ACCOUNT_ID_NADIRA")
             token=os.getenv("METAAPI_TOKEN_NADIRA")
