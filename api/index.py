@@ -18,7 +18,7 @@ class handler(BaseHTTPRequestHandler):
 
         self.wfile.write('Hello, world!'.encode('utf-8'))
         return
-    def fetch_data(symbol="XAUUSD=X", interval="1m", period="1d"):
+    def fetch_data(symbol, interval, period):
         
         data = yf.download(tickers=symbol, interval=interval, period=period)
         data = data.dropna()  # Drop rows with missing values
@@ -46,7 +46,7 @@ class handler(BaseHTTPRequestHandler):
     def do_POST(self):
         #"""Main handler for Vercel function."""
         # Fetch and process data
-        data = fetch_data()
+        data = fetch_data("XAUUSDm","1m","1d")
         data = calculate_indicators(data)
         signal, price = check_trading_signals(data)
         if (signal):
@@ -58,8 +58,8 @@ class handler(BaseHTTPRequestHandler):
                 "symbol": "XAUUSDm",
                 "actionType": signal,
                 "volume": 1,
-                "stopLoss": 0,
-                "takeProfit": 10,
+                "stopLoss": 5,
+                "takeProfit": 3,
                 "takeProfitUnits": "RELATIVE_PIPS"
             }
             headers = {
